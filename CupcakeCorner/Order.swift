@@ -25,20 +25,8 @@ class Order: ObservableObject, Codable {
             }
         }
     }
-    @Published var extraFrosting = false {
-        didSet {
-            if extraFrosting {
-                specialRequestEnabled = true
-            }
-        }
-    }
-    @Published var addSprinkles = false {
-        didSet {
-            if addSprinkles {
-                specialRequestEnabled = true
-            }
-        }
-    }
+    @Published var extraFrosting = false
+    @Published var addSprinkles = false
     
     @Published var name = ""
     @Published var streetAddress = ""
@@ -98,6 +86,10 @@ class Order: ObservableObject, Codable {
         streetAddress = try container.decode(String.self, forKey: .streetAddress)
         city = try container.decode(String.self, forKey: .city)
         zip = try container.decode(String.self, forKey: .zip)
+        
+        if addSprinkles || extraFrosting {
+            specialRequestEnabled = true
+        }
     }
     
 }
