@@ -18,33 +18,26 @@ struct Result: Codable {
 }
 
 struct ContentView: View {
-    @State private var results = [Result]()
+    @State private var userName = ""
+    @State private var email = ""
     var body: some View {
-        VStack {
-            Spacer()
-            
-            AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { image in
-                image.resizable()
-            } placeholder: {
-                ProgressView()
+        Form {
+            Section {
+                TextField("User Name", text: $userName)
+                TextField("Email", text: $email)
             }
-            .frame(width: 200, height: 200)
             
-            Spacer()
-            
-            AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { phase in
-                if let image = phase.image {
-                    image.resizable()
-                } else if phase.error != nil {
-                    Text("Image not found")
-                } else {
-                    ProgressView()
+            Section {
+                Button("Create Accoount") {
+                    print("Creating account")
                 }
+                .disabled(disableForm)
             }
-            .frame(width: 200, height: 200)
-            
-            Spacer()
         }
+    }
+    
+    var disableForm: Bool {
+        return email.count < 5 || email.count < 5
     }
 }
 
