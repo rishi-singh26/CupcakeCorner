@@ -20,31 +20,30 @@ struct Result: Codable {
 struct ContentView: View {
     @State private var results = [Result]()
     var body: some View {
-        List(results, id: \.trackId) { item in
-            VStack(alignment: .leading) {
-                Text(item.trackName)
-                    .font(.headline)
-                Text(item.collectionName)
+        VStack {
+            Spacer()
+            
+            AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { image in
+                image.resizable()
+            } placeholder: {
+                ProgressView()
             }
-        }
-        .task {
-            await loadData()
-        }
-    }
-    
-    func loadData() async {
-        guard let url = URL(string: "https://itunes.apple.com/search?term=taylor+swift&entity=song") else {
-            print("Invalid URL")
-            return
-        }
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            if let decodedResp = try? JSONDecoder().decode(Response.self, from: data) {
-                results = decodedResp.results;
+            .frame(width: 200, height: 200)
+            
+            Spacer()
+            
+            AsyncImage(url: URL(string: "https://hws.dev/img/logo.png")) { phase in
+                if let image = phase.image {
+                    image.resizable()
+                } else if phase.error != nil {
+                    Text("Image not found")
+                } else {
+                    ProgressView()
+                }
             }
-        } catch {
-            print("Invalid data")
+            .frame(width: 200, height: 200)
+            
+            Spacer()
         }
     }
 }
