@@ -10,6 +10,7 @@ import SwiftUI
 struct CheckoutView: View {
     @ObservedObject var order: Order
     
+    @State private var confirmaionTitle = "Thank You!"
     @State private var confirmaionMessage = ""
     @State private var showingConfirmation = false
 
@@ -39,7 +40,7 @@ struct CheckoutView: View {
         }
         .navigationTitle("Check out")
         .navigationBarTitleDisplayMode(.inline)
-        .alert("Thank You!", isPresented: $showingConfirmation) {
+        .alert(confirmaionTitle, isPresented: $showingConfirmation) {
             Button("Ok") {}
         } message: {
             Text(confirmaionMessage)
@@ -61,12 +62,15 @@ struct CheckoutView: View {
             let (data, _) = try await URLSession.shared.upload(for: request, from: encoded)
             
             if let decodedOrder = try? JSONDecoder().decode(Order.self, from: data) {
+                confirmaionTitle = "Thank You!"
                 confirmaionMessage = "Your order for \(decodedOrder.quantity) x \(Order.types[decodedOrder.type].lowercased()) cupcakes is on its way"
                 showingConfirmation = true
             }
             
         } catch {
-            print("Checkout failed")
+            confirmaionTitle = "Alert!"
+            confirmaionMessage = "An error occured while placing your order. Please try again."
+            showingConfirmation = true
         }
     }
 }

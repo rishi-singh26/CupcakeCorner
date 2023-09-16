@@ -34,10 +34,14 @@ class Order: ObservableObject, Codable {
     @Published var zip = ""
     
     var hasValidAddress: Bool {
-        if name.isEmpty || streetAddress.isEmpty || city.isEmpty || zip.isEmpty {
+        if isNotValid(address: name) || isNotValid(address: streetAddress) || isNotValid(address: city) || isNotValid(address: zip) {
             return false
         }
         return true
+    }
+    
+    private func isNotValid(address text: String) -> Bool {
+        return text.lowercased().trimmingCharacters(in: .whitespaces).isEmpty
     }
     
     var cost: Double {
